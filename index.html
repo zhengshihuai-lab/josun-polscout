@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>喬山永續 | 政新哨兵 — ESG政策追蹤智能體 v5.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=Noto+Sans+TC:wght@300;400;500;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* === JOSUN Brand Playbook v3 — Sage Intelligence Brief === */
+  --bg-deep: #F4F4F4;
+  --bg-panel: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #F4F4F4;
+  --border: #E5E5E5;
+  --border-accent: #D0D0D0;
+  --josun-green: #54B033;
+  --josun-green-dim: #3D8A25;
+  --josun-green-muted: #E8F5E1;
+  --josun-green-subtle: rgba(84,176,51,0.06);
+  --brand-green: #6CB729;
+  --brand-dark: #014725;
+  --josun-dark-green: #014725;
+  --josun-light-cyan: #74DEF8;
+  --josun-mint: #A9EAD4;
+  --josun-light-green: #C0FFAE;
+  --josun-accent-green: #6CB729;
+  --josun-accent-pink: #FF0099;
+  --text-primary: #1A1A1A;
+  --text-secondary: #595857;
+  --text-muted: #A3A3A3;
+  --accent-blue: #2B7DE9;
+  --accent-amber: #E8920D;
+  --accent-red: #E5484D;
+  --accent-purple: #8B5CF6;
+  --accent-cyan: #0EA5E9;
+  --radius: 10px;
+  --radius-lg: 14px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans', sans-serif; background: var(--bg-deep); color: var(--text-primary); line-height: 1.7; overflow-x: hidden; }
+::selection { background: rgba(84,176,51,0.2); color: #1A1A1A; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: #C0C0C0; border-radius: 3px; }
+.mono { font-family: 'Roboto', sans-serif; }
+
+/* Top Accent Bar */
+.accent-bar { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 200; background: linear-gradient(90deg, #FF0099, #54B033 50%, #74DEF8); }
+
+.header { position: relative; z-index: 1; padding: 48px 48px 32px; display: flex; align-items: flex-end; justify-content: space-between; background: #FFFFFF; border-bottom: 1px solid var(--border); }
+.header-left { max-width: 800px; }
+.brand-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.brand-circle { width: 40px; height: 40px; border-radius: 50%; background: #54B033; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+.brand-circle::after { content: ''; width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid rgba(255,255,255,0.9); position: absolute; }
+.brand-wordmark { font-family: 'Roboto', sans-serif; font-size: 22px; font-weight: 700; color: var(--josun-dark-green); letter-spacing: 3px; }
+.header-tag { display: inline-flex; align-items: center; gap: 8px; font-family: 'Roboto', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--josun-green); text-transform: uppercase; margin-bottom: 12px; font-weight: 500; }
+.header-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--josun-green); box-shadow: 0 0 8px rgba(84,176,51,0.4); animation: pulse 2s infinite; }
+.header h1 { font-size: 32px; font-weight: 900; letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 8px; color: #1A1A1A; }
+.header h1 span { color: var(--josun-green); }
+.header-sub { font-size: 13px; color: var(--text-secondary); font-weight: 400; }
+.header-right { text-align: right; font-family: 'Roboto', sans-serif; font-size: 11px; color: var(--text-muted); }
+.header-right .date { font-size: 24px; color: var(--text-primary); font-weight: 700; letter-spacing: -1px; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0 48px; display: flex; gap: 0; overflow-x: auto; }
+.nav a { padding: 14px 18px; font-size: 11px; letter-spacing: 1px; color: var(--text-muted); text-decoration: none; font-family: 'Roboto', sans-serif; text-transform: uppercase; border-bottom: 2px solid transparent; transition: all 0.3s; white-space: nowrap; cursor: pointer; font-weight: 500; }
+.nav a:hover, .nav a.active { color: var(--josun-green); border-bottom-color: var(--josun-green); }
+
+.main { position: relative; z-index: 1; padding: 0 48px 80px; }
+.tab-panel { display: none; padding-top: 40px; }
+.tab-panel.active { display: block; animation: fadeIn 0.4s; }
+
+.section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.section-num { font-family: 'Roboto', sans-serif; font-size: 11px; color: #FFFFFF; background: var(--josun-green); width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; letter-spacing: 1px; font-weight: 600; flex-shrink: 0; }
+.section-title { font-size: 20px; font-weight: 700; color: #1A1A1A; }
+.section-desc { font-size: 12px; color: var(--text-muted); margin-left: auto; font-family: 'Roboto', sans-serif; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 32px; }
+.kpi-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 32px; }
+.kpi-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+.kpi-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 14px 14px 0 0; }
+.kpi-card:nth-child(1)::before { background: var(--josun-green); }
+.kpi-card:nth-child(2)::before { background: var(--accent-blue); }
+.kpi-card:nth-child(3)::before { background: var(--accent-amber); }
+.kpi-card:nth-child(4)::before { background: var(--accent-purple); }
+.kpi-card:nth-child(5)::before { background: var(--accent-red); }
+.kpi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-family: 'Roboto', sans-serif; margin-bottom: 10px; font-weight: 500; }
+.kpi-value { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 2px; }
+.kpi-unit { font-size: 12px; color: var(--text-secondary); }
+.kpi-detail { font-size: 11px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+
+.filter-bar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+.filter-bar input, .filter-bar select { padding: 8px 14px; border-radius: 100px; font-size: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-primary); font-family: 'Noto Sans SC', sans-serif; outline: none; transition: border-color 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.filter-bar input:focus, .filter-bar select:focus { border-color: var(--josun-green); box-shadow: 0 0 0 3px rgba(84,176,51,0.1); }
+.filter-bar input { min-width: 240px; }
+.filter-count { font-family: 'Roboto', sans-serif; font-size: 11px; color: var(--text-muted); margin-left: auto; font-weight: 500; }
+
+.data-table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.data-table th { padding: 12px 16px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-family: 'Roboto', sans-serif; color: var(--text-muted); background: var(--bg-elevated); border-bottom: 1px solid var(--border); font-weight: 600; position: sticky; top: 0; }
+.data-table td { padding: 12px 16px; font-size: 12px; color: var(--text-secondary); border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: top; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(84,176,51,0.03); }
+.data-table td:first-child { font-weight: 500; color: var(--text-primary); }
+
+.tag { display: inline-block; padding: 2px 8px; border-radius: 100px; font-size: 10px; font-family: 'Roboto', sans-serif; letter-spacing: 0.5px; margin: 1px 2px; white-space: nowrap; font-weight: 500; }
+.tag-national { background: rgba(229,72,77,0.1); color: var(--accent-red); }
+.tag-provincial { background: rgba(43,125,233,0.1); color: var(--accent-blue); }
+.tag-carbon { background: rgba(84,176,51,0.1); color: var(--josun-green); }
+.tag-green { background: rgba(84,176,51,0.1); color: var(--josun-green); }
+.tag-zero { background: rgba(139,92,246,0.1); color: var(--accent-purple); }
+.tag-energy { background: rgba(232,146,13,0.1); color: var(--accent-amber); }
+.tag-smart { background: rgba(14,165,233,0.1); color: var(--accent-cyan); }
+.tag-building { background: rgba(229,72,77,0.1); color: var(--accent-red); }
+.tag-active { background: rgba(84,176,51,0.12); color: var(--josun-green); }
+.tag-planned { background: rgba(232,146,13,0.12); color: var(--accent-amber); }
+.tag-semi { background: rgba(43,125,233,0.1); color: var(--accent-blue); }
+.tag-pcb { background: rgba(84,176,51,0.1); color: var(--josun-green); }
+.tag-ems { background: rgba(139,92,246,0.1); color: var(--accent-purple); }
+.tag-pharma { background: rgba(14,165,233,0.1); color: var(--accent-cyan); }
+.tag-battery { background: rgba(232,146,13,0.1); color: var(--accent-amber); }
+.tag-display { background: rgba(229,72,77,0.1); color: var(--accent-red); }
+.tag-auto { background: rgba(43,125,233,0.1); color: var(--accent-blue); }
+.tag-food { background: rgba(84,176,51,0.1); color: var(--josun-green); }
+.tag-realestate { background: rgba(139,92,246,0.1); color: var(--accent-purple); }
+.tag-datacenter { background: rgba(229,72,77,0.1); color: var(--accent-red); }
+.tag-fmcs { background: rgba(84,176,51,0.1); color: var(--josun-green); }
+.tag-ai { background: rgba(14,165,233,0.1); color: var(--accent-cyan); }
+.tag-icair { background: rgba(232,146,13,0.1); color: var(--accent-amber); }
+.tag-bid { background: rgba(84,176,51,0.12); color: var(--josun-green); border: 1px solid rgba(84,176,51,0.25); }
+.tag-nobid { background: rgba(229,72,77,0.12); color: var(--accent-red); border: 1px solid rgba(229,72,77,0.25); }
+
+.table-wrap { max-height: 700px; overflow-y: auto; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.table-wrap::-webkit-scrollbar { width: 6px; }
+.table-wrap::-webkit-scrollbar-thumb { background: #C0C0C0; border-radius: 3px; }
+
+.indicator-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.indicator-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
+.indicator-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.indicator-card-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: #1A1A1A; }
+.indicator-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.indicator-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.06); font-size: 12px; }
+.indicator-row:last-child { border-bottom: none; }
+.indicator-row .label { color: var(--text-secondary); }
+.indicator-row .value { color: var(--text-primary); font-weight: 600; font-family: 'Roboto', sans-serif; }
+
+.opp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.opp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.opp-card:hover { border-color: var(--josun-green); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.opp-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.opp-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.opp-title { font-size: 15px; font-weight: 700; color: #1A1A1A; }
+.opp-sub { font-size: 11px; color: var(--text-muted); font-family: 'Roboto', sans-serif; font-weight: 500; }
+.opp-body { font-size: 12px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 14px; }
+.opp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.opp-stat { background: var(--bg-elevated); border-radius: 10px; padding: 10px; text-align: center; }
+.opp-stat-value { font-size: 18px; font-weight: 900; font-family: 'Roboto', sans-serif; }
+.opp-stat-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; font-weight: 500; }
+
+.province-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 32px; }
+.province-chip { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.province-chip:hover { border-color: var(--josun-green); background: var(--josun-green-subtle); }
+.province-chip.active { border-color: var(--josun-green); background: var(--josun-green-muted); }
+.province-name { font-size: 13px; font-weight: 500; color: #1A1A1A; }
+.province-count { font-family: 'Roboto', sans-serif; font-size: 11px; color: var(--josun-green); background: rgba(84,176,51,0.1); padding: 2px 8px; border-radius: 100px; font-weight: 600; }
+
+.product-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
+.product-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.product-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: 14px 14px 0 0; }
+.product-card.fmcs::before { background: linear-gradient(90deg, var(--josun-green), var(--brand-green)); }
+.product-card.ai::before { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue)); }
+.product-card.icair::before { background: linear-gradient(90deg, var(--accent-amber), var(--accent-red)); }
+.product-title { font-size: 18px; font-weight: 900; color: #1A1A1A; }
+.product-subtitle { font-size: 11px; color: var(--text-muted); font-family: 'Roboto', sans-serif; letter-spacing: 1px; margin-bottom: 16px; font-weight: 500; }
+.funnel-bar { height: 6px; border-radius: 3px; margin: 6px 0 4px; overflow: hidden; background: var(--bg-elevated); }
+.funnel-fill { height: 100%; border-radius: 3px; transition: width 0.8s; }
+
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.team-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 10px; padding: 16px; transition: transform 0.3s, box-shadow 0.3s; }
+.team-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.team-name { font-size: 14px; font-weight: 700; color: #1A1A1A; }
+.team-role { font-size: 10px; color: var(--josun-green); font-family: 'Roboto', sans-serif; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+.team-resp { font-size: 11px; color: var(--text-secondary); line-height: 1.6; }
+
+.timeline { position: relative; padding-left: 24px; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.timeline-item { position: relative; padding: 0 0 24px 24px; }
+.timeline-item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--josun-green); background: #FFFFFF; }
+.timeline-item.past::before { background: var(--josun-green); }
+.timeline-month { font-family: 'Roboto', sans-serif; font-size: 11px; color: var(--josun-green); letter-spacing: 1px; margin-bottom: 6px; font-weight: 600; }
+.timeline-content { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+
+.bid-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.bid-table th { padding: 12px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-family: 'Roboto', sans-serif; color: var(--text-muted); background: var(--bg-elevated); border-bottom: 2px solid var(--border); font-weight: 600; }
+.bid-table td { padding: 10px 12px; border-bottom: 1px solid rgba(0,0,0,0.06); color: var(--text-secondary); }
+.bid-table tr:hover td { background: rgba(84,176,51,0.03); }
+
+.case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.case-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.case-card:hover { border-color: var(--josun-green); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.case-client { font-size: 15px; font-weight: 700; color: #1A1A1A; }
+.case-industry { font-size: 10px; color: var(--josun-green); font-family: 'Roboto', sans-serif; letter-spacing: 1px; margin-bottom: 12px; font-weight: 600; }
+.case-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 12px; }
+.case-result { font-size: 11px; color: var(--text-muted); padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); }
+
+.vc-flow { display: flex; gap: 0; margin-bottom: 32px; overflow-x: auto; }
+.vc-stage { flex: 1; min-width: 180px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.vc-stage::after { content: '\2192'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--josun-green); font-size: 18px; z-index: 1; font-weight: 700; }
+.vc-stage:last-child::after { display: none; }
+.vc-stage-num { font-family: 'Roboto', sans-serif; font-size: 10px; color: var(--josun-green); letter-spacing: 1px; margin-bottom: 4px; font-weight: 600; }
+.vc-stage-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #1A1A1A; }
+.vc-stage-items { font-size: 11px; color: var(--text-secondary); line-height: 1.8; }
+.comp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.comp-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; }
+.comp-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.comp-type { font-size: 10px; font-family: 'Roboto', sans-serif; letter-spacing: 2px; margin-bottom: 8px; font-weight: 600; }
+.comp-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: #1A1A1A; }
+.comp-list { font-size: 11px; color: var(--text-secondary); line-height: 2; }
+.comp-verdict { font-size: 12px; color: var(--josun-green); margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.06); font-weight: 600; }
+.industry-chain { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px; }
+.chain-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; text-align: center; transition: all 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.chain-card:hover { border-color: var(--josun-green); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.chain-icon { font-size: 24px; margin-bottom: 8px; }
+.chain-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; color: #1A1A1A; }
+.chain-metric { font-family: 'Roboto', sans-serif; font-size: 18px; font-weight: 900; margin: 8px 0; }
+.chain-label { font-size: 10px; color: var(--text-muted); font-family: 'Roboto', sans-serif; letter-spacing: 1px; font-weight: 500; }
+.chain-detail { font-size: 11px; color: var(--text-secondary); line-height: 1.6; margin-top: 8px; }
+
+.dark-section { background: var(--josun-dark-green); color: #FFFFFF; border-radius: var(--radius-lg); padding: 28px; }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg); max-width: 640px; width: 90%; max-height: 80vh; overflow-y: auto; padding: 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.modal-close { float: right; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
+.modal h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; padding-right: 30px; color: #1A1A1A; }
+.modal-field { margin-bottom: 14px; }
+.modal-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; font-family: 'Roboto', sans-serif; margin-bottom: 4px; font-weight: 500; }
+.modal-value { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+.modal-value a { color: var(--josun-green); text-decoration: none; font-weight: 500; }
+.modal-value a:hover { text-decoration: underline; }
+
+.expand-btn { background: none; border: none; color: var(--josun-green); cursor: pointer; font-size: 12px; font-family: 'Roboto', sans-serif; padding: 2px 6px; border-radius: 6px; transition: background 0.2s; font-weight: 500; }
+.expand-btn:hover { background: var(--josun-green-subtle); }
+
+.update-list { list-style: none; }
+.update-item { padding: 16px 0; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; gap: 16px; }
+.update-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--josun-green); margin-top: 8px; flex-shrink: 0; }
+.update-date { font-family: 'Roboto', sans-serif; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; }
+.update-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+.footer { padding: 32px 48px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-family: 'Roboto', sans-serif; font-size: 10px; color: var(--text-muted); background: #FFFFFF; font-weight: 500; }
+.footer-brand { display: flex; align-items: center; gap: 10px; }
+.footer-circle { width: 20px; height: 20px; border-radius: 50%; background: #54B033; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; position: relative; }
+.footer-circle::after { content: ''; width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.9); position: absolute; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+@media (max-width: 1200px) { .kpi-grid, .kpi-grid-4 { grid-template-columns: repeat(3, 1fr); } .kpi-grid-3 { grid-template-columns: repeat(2, 1fr); } .indicator-grid, .case-grid { grid-template-columns: repeat(2, 1fr); } .opp-grid { grid-template-columns: 1fr; } .industry-chain { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .header, .nav, .main, .footer { padding-left: 20px; padding-right: 20px; } .kpi-grid, .kpi-grid-4, .kpi-grid-3, .indicator-grid, .case-grid { grid-template-columns: 1fr; } .industry-chain { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="accent-bar"></div>
+
+<header class="header">
+  <div class="header-left">
+    <div class="brand-logo">
+      <div class="brand-circle"></div>
+      <span class="brand-wordmark">JOSUN</span>
+    </div>
+    <div class="header-tag">Policy Intelligence Scout v5.0</div>
+    <h1>政新哨兵 <span>|</span> ESG政策追蹤智能體</h1>
+    <p class="header-sub">喬山永續科技集團 — 政策情報 &middot; 國務院指標 &middot; 機會論述 &middot; 產業價值鏈</p>
+  </div>
+  <div class="header-right">
+    <div class="date" id="currentDate">2026.06</div>
+    <div style="margin-top:4px">JOSUN SUSTAINABLE TECHNOLOGY GROUP</div>
+    <div style="margin-top:2px">v5.0 — PARTNER EDITION</div>
+  </div>
+</header>
+
+<nav class="nav" id="mainNav">
+  <a data-tab="policy" class="active">政策追蹤</a>
+  <a data-tab="indicators">國務院指標</a>
+  <a data-tab="opportunity">機會對焦</a>
+  <a data-tab="policybrief">政策論述</a>
+  <a data-tab="valuechain">產業價值鏈</a>
+  <a data-tab="cases">實績案例</a>
+  <a data-tab="factories">在建廠企業</a>
+  <a data-tab="updates">更新日誌</a>
+</nav>
+
+<div class="main">
+
+<!-- ===== TAB: POLICY TRACKER ===== -->
+<div class="tab-panel active" id="tab-policy">
+  <div class="section-header"><span class="section-num">01</span><span class="section-title">ESG政策追蹤</span><span class="section-desc">Provincial NDRC / MIIT Policy Database</span></div>
+  <div style="margin-bottom:16px;font-size:12px;color:var(--text-muted);font-family:'Roboto',sans-serif;letter-spacing:1px;font-weight:500;">PROVINCE FILTER</div>
+  <div class="province-grid" id="provinceChips"></div>
+  <div class="filter-bar">
+    <input type="text" id="policySearch" placeholder="搜尋政策名稱 / 發布單位 / 關鍵指標...">
+    <select id="categoryFilter"><option value="">全部類別</option></select>
+    <select id="levelFilter"><option value="">全部層級</option><option value="national">國家級</option><option value="provincial">省級</option></select>
+    <select id="statusFilter"><option value="">全部狀態</option><option value="已實施">已實施</option><option value="規劃中">規劃中</option></select>
+    <span class="filter-count" id="policyCount">顯示 55 / 55 項</span>
+  </div>
+  <div class="table-wrap">
+    <table class="data-table" id="policyTable">
+      <thead><tr><th style="width:80px">省市</th><th style="width:70px">層級</th><th style="width:140px">發布單位</th><th>政策名稱</th><th style="width:80px">日期</th><th style="width:80px">類別</th><th style="width:80px">狀態</th><th style="width:50px">詳情</th></tr></thead>
+      <tbody id="policyBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== TAB: INDICATORS ===== -->
+<div class="tab-panel" id="tab-indicators">
+  <div class="section-header"><span class="section-num">02</span><span class="section-title">國務院重點指標</span><span class="section-desc">State Council Key Performance Indicators</span></div>
+  <div class="indicator-grid" id="indicatorGrid"></div>
+  <div class="dark-section" style="margin-top:16px;">
+    <div style="font-size:15px;font-weight:700;margin-bottom:16px;">雙碳路徑關鍵里程碑</div>
+    <div style="display:flex;gap:0;flex-wrap:wrap;">
+      <div style="flex:1;min-width:160px;padding:16px;text-align:center;border-right:1px solid rgba(255,255,255,0.15);"><div class="mono" style="font-size:10px;color:var(--josun-light-green);letter-spacing:1px;margin-bottom:6px;">2025</div><div style="font-size:12px;font-weight:600;margin-bottom:4px;">十四五收官</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">單位GDP能耗降13.5%<br>非化石能源佔比20%</div></div>
+      <div style="flex:1;min-width:160px;padding:16px;text-align:center;border-right:1px solid rgba(255,255,255,0.15);"><div class="mono" style="font-size:10px;color:var(--josun-light-cyan);letter-spacing:1px;margin-bottom:6px;">2027</div><div style="font-size:12px;font-weight:600;margin-bottom:4px;">零碳工廠先行</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">電子/汽車/輕工<br>率先建設零碳工廠</div></div>
+      <div style="flex:1;min-width:160px;padding:16px;text-align:center;border-right:1px solid rgba(255,255,255,0.15);"><div class="mono" style="font-size:10px;color:var(--josun-mint);letter-spacing:1px;margin-bottom:6px;">2030</div><div style="font-size:12px;font-weight:600;margin-bottom:4px;">碳達峰</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">CO2排較2005降65%+<br>零碳工廠全行業覆蓋</div></div>
+      <div style="flex:1;min-width:160px;padding:16px;text-align:center;border-right:1px solid rgba(255,255,255,0.15);"><div class="mono" style="font-size:10px;color:var(--josun-light-cyan);letter-spacing:1px;margin-bottom:6px;">2035</div><div style="font-size:12px;font-weight:600;margin-bottom:4px;">碳排放雙控</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">碳排放總量+強度<br>雙控制度全面落地</div></div>
+      <div style="flex:1;min-width:160px;padding:16px;text-align:center;"><div class="mono" style="font-size:10px;color:var(--josun-accent-pink);letter-spacing:1px;margin-bottom:6px;">2060</div><div style="font-size:12px;font-weight:600;margin-bottom:4px;">碳中和</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">全面實現碳中和<br>非化石能源主導</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: OPPORTUNITY ALIGNMENT ===== -->
+<div class="tab-panel" id="tab-opportunity">
+  <div class="section-header"><span class="section-num">03</span><span class="section-title">政策 x 產品線機會對焦</span><span class="section-desc">Policy x Product Line Opportunity Alignment</span></div>
+  <div class="opp-grid" id="oppGrid"></div>
+</div>
+
+<!-- ===== TAB: POLICY BRIEF ===== -->
+<div class="tab-panel" id="tab-policybrief">
+  <div class="section-header"><span class="section-num">04</span><span class="section-title">政策對標喬山 — 機會點與論述點</span><span class="section-desc">Policy-to-JOSUN Opportunity & Argumentation Matrix</span></div>
+
+  <div style="font-size:14px;color:var(--text-secondary);margin-bottom:28px;line-height:1.8;padding:20px 24px;background:var(--josun-green-muted);border-radius:var(--radius-lg);border-left:4px solid var(--josun-green);">
+    <strong style="color:var(--text-primary);">使用說明：</strong>以下按政策主題分組，每組提供「政策背景 → 客戶痛點 → 喬山方案 → 論述金句」四層對標結構。業務團隊可直接引用論述金句作為客戶溝通話術。
+  </div>
+
+  <div id="policyBriefGrid"></div>
+</div>
+
+<!-- ===== TAB: VALUE CHAIN ===== -->
+<div class="tab-panel" id="tab-valuechain">
+  <div class="section-header"><span class="section-num">05</span><span class="section-title">產業價值鏈分析</span><span class="section-desc">Industry Value Chain Intelligence</span></div>
+
+  <div style="font-size:16px;font-weight:700;margin-bottom:16px;">政策 → 產業影響 → 客戶需求 → 喬山產品線匹配</div>
+  <div class="vc-flow" id="vcFlow">
+    <div class="vc-stage"><div class="vc-stage-num">STAGE 1</div><div class="vc-stage-title">政策驅動</div><div class="vc-stage-items"><span class="tag tag-zero">零碳工廠</span> 2027先行<br><span class="tag tag-smart">AI+製造</span> 1000智能體<br><span class="tag tag-energy">CBAM</span> 2026起徵<br><span class="tag tag-carbon">碳達峰</span> 2030目標<br><span class="tag tag-green">綠色工廠</span> 2038家認定</div></div>
+    <div class="vc-stage"><div class="vc-stage-num">STAGE 2</div><div class="vc-stage-title">產業影響</div><div class="vc-stage-items"><strong style="color:var(--text-primary);">PCB:</strong> Apple供應鏈ESG審查加壓<br><strong style="color:var(--text-primary);">半導體:</strong> 能耗監察擴圍+IPO驅動<br><strong style="color:var(--text-primary);">面板:</strong> EUI 625-750 kWh/m² 高耗能<br><strong style="color:var(--text-primary);">製藥:</strong> GMP潔淨室+碳足跡雙要求<br><strong style="color:var(--text-primary);">EMS:</strong> RBA/SBTi/RE100國際標準</div></div>
+    <div class="vc-stage"><div class="vc-stage-num">STAGE 3</div><div class="vc-stage-title">客戶需求</div><div class="vc-stage-items">FMCS數位化底座 (剛需)<br>AI智能廠務管理 (增值)<br>碳足跡盤查+追溯 (合規)<br>能源管理ISO 50001 (認證)<br>HVAC節能改造 (降本)</div></div>
+    <div class="vc-stage"><div class="vc-stage-num">STAGE 4</div><div class="vc-stage-title">喬山匹配</div><div class="vc-stage-items"><span class="tag tag-fmcs">FMCS統包</span> 8,600萬<br><span class="tag tag-ai">JolyHi AI</span> 1,075萬<br><span class="tag tag-icair">iCAIR空調</span> 2,150萬<br><span class="tag tag-ai">FEM智能櫃</span> 經銷<br><span class="tag tag-fmcs">ESG輔導</span> 諮詢</div></div>
+    <div class="vc-stage"><div class="vc-stage-num">STAGE 5</div><div class="vc-stage-title">報價策略</div><div class="vc-stage-items">Bid: 年電費&gt;1,075萬<br>優先: &gt;2,150萬大客戶<br>毛利紅線: FMCS&gt;35-50%<br>AI毛利: &gt;50% (POC驅動)<br>成案率目標: 50-60%</div></div>
+  </div>
+
+  <div style="font-size:16px;font-weight:700;margin-bottom:16px;">五大目標產業鏈動態追蹤</div>
+  <div class="industry-chain" id="industryChain">
+    <div class="chain-card"><div class="chain-icon">&#x1F532;</div><div class="chain-name">PCB 印刷電路板</div><div class="chain-metric" style="color:var(--josun-green);">7</div><div class="chain-label">在建廠項目</div><div class="chain-detail">鵬鼎/臻鼎(泰國)、臺郡、健鼎等全球佈局。<br>Apple供應鏈ESG審核為核心驅動力。<br><span class="mono" style="color:var(--accent-amber);">投資規模: 超千億</span></div></div>
+    <div class="chain-card"><div class="chain-icon">&#x2B21;</div><div class="chain-name">半導體封裝</div><div class="chain-metric" style="color:var(--accent-blue);">12</div><div class="chain-label">在建廠項目</div><div class="chain-detail">中芯國際(4座)、長鑫存儲、長江存儲、粵芯。<br>IPO+能耗監察雙驅動，潔淨室EUI高達750。<br><span class="mono" style="color:var(--accent-amber);">投資規模: 超萬億</span></div></div>
+    <div class="chain-card"><div class="chain-icon">&#x25C8;</div><div class="chain-name">面板/光電</div><div class="chain-metric" style="color:var(--accent-purple);">4</div><div class="chain-label">在建廠項目</div><div class="chain-detail">川奇光電(揚州)低碳標杆已驗證。<br>磁懸浮+冷回收+太陽能=年省2.45MWh。<br><span class="mono" style="color:var(--accent-amber);">投資規模: 百億級</span></div></div>
+    <div class="chain-card"><div class="chain-icon">&#x25B3;</div><div class="chain-name">生物製藥</div><div class="chain-metric" style="color:var(--accent-cyan);">8</div><div class="chain-label">在建廠項目</div><div class="chain-detail">跨國巨頭(輝瑞/諾華/賽諾菲)+本土龍頭。<br>GMP潔淨室+碳足跡+ESG三重合規需求。<br><span class="mono" style="color:var(--accent-amber);">投資規模: 千億級</span></div></div>
+    <div class="chain-card"><div class="chain-icon">&#x25A1;</div><div class="chain-name">EMS 電子代工</div><div class="chain-metric" style="color:var(--accent-red);">6</div><div class="chain-label">在建廠項目</div><div class="chain-detail">和碩(全球前五大EMS)、富士康等。<br>RBA/SBTi/RE100國際標準為剛性需求。<br><span class="mono" style="color:var(--accent-amber);">投資規模: 百億級</span></div></div>
+  </div>
+
+  <div style="font-size:16px;font-weight:700;margin-bottom:16px;">競爭格局 x 喬山差異化優勢</div>
+  <div class="comp-grid">
+    <div class="comp-card"><div class="comp-type" style="color:var(--accent-red);">COMPETITOR TYPE A</div><div class="comp-title">純 AI 公司</div><div class="comp-list"><strong>代表:</strong> 工業大腦、格創東智、雪浪數制<br><strong>優勢:</strong> 算法強、融資多、品牌響<br><strong>弱點:</strong> 無現場數據、無控制權<br><strong>客戶痛點:</strong> 「平台好看但現場無法落地」<br><strong>典型失敗:</strong> 部署後因缺乏Domain Know-how淪為玩具</div><div class="comp-verdict">喬山優勢: 擁有第一手場域數據與PLC控制權</div></div>
+    <div class="comp-card"><div class="comp-type" style="color:var(--accent-blue);">COMPETITOR TYPE B</div><div class="comp-title">傳統系統集成商 (SI)</div><div class="comp-list"><strong>代表:</strong> 聖暉、亞翔、十一科技、中電二<br><strong>優勢:</strong> 工程能力強、客戶關係深<br><strong>弱點:</strong> 交付即結束、無數據運營<br><strong>客戶痛點:</strong> 「系統交完就走了，沒人管優化」<br><strong>典型失敗:</strong> FMCS運行5年無人優化，能效逐年下降</div><div class="comp-verdict">喬山優勢: 不只交付系統，還持續運營數據平台</div></div>
+    <div class="comp-card"><div class="comp-type" style="color:var(--accent-amber);">COMPETITOR TYPE C</div><div class="comp-title">傳統顧問公司</div><div class="comp-list"><strong>代表:</strong> SGS、TÜV、德勤ESG、安永碳中和<br><strong>優勢:</strong> 品牌信任度高、認證資質全<br><strong>弱點:</strong> 只做報告不做落地<br><strong>客戶痛點:</strong> 「報告寫完還是不會做」<br><strong>典型失敗:</strong> 碳盤查報告漂亮但數據全靠手抄Excel</div><div class="comp-verdict">喬山優勢: 數據基建+AI模型+節能控制一條龍</div></div>
+  </div>
+
+  <div style="font-size:16px;font-weight:700;margin-bottom:16px;">產業鏈上下游動態信號</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px;">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.05);"><div style="font-size:10px;color:var(--josun-green);font-family:'Roboto',sans-serif;letter-spacing:2px;margin-bottom:12px;font-weight:600;">UPSTREAM 上游信號</div><div style="font-size:12px;color:var(--text-secondary);line-height:2;"><strong style="color:var(--text-primary);">NVIDIA:</strong> RTX Pro 6000 Ada GPU 供貨穩定 → FEM智能櫃產能無虞<br><strong style="color:var(--text-primary);">研華 Advantech:</strong> HPC-8208 企業級伺服器 → 戰略合作夥伴<br><strong style="color:var(--text-primary);">西門子/ABB:</strong> PLC/DDC 供貨正常 → FMCS控制核心穩定<br><strong style="color:var(--text-primary);">磁懸浮冰機:</strong> 國產替代加速(丹佛斯/格力) → iCAIR成本下降</div></div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.05);"><div style="font-size:10px;color:var(--accent-blue);font-family:'Roboto',sans-serif;letter-spacing:2px;margin-bottom:12px;font-weight:600;">DOWNSTREAM 下游信號</div><div style="font-size:12px;color:var(--text-secondary);line-height:2;"><strong style="color:var(--text-primary);">Apple:</strong> 2030全供應鏈碳中和 → PCB/EMS客戶剛需<br><strong style="color:var(--text-primary);">台積電:</strong> RE100+SBTi → 上游供應商跟進效應<br><strong style="color:var(--text-primary);">歐盟CBAM:</strong> 2026.01起徵+2028擴180品類 → 出口商急迫<br><strong style="color:var(--text-primary);">科創板IPO:</strong> ESG披露為必要條件 → 長鑫/粵芯等強驅動</div></div>
+  </div>
+
+  <div style="font-size:16px;font-weight:700;margin-bottom:16px;">價值鏈營收映射 — 從政策到訂單的轉化路徑</div>
+  <div class="dark-section">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
+      <div style="padding:16px;border-right:1px solid rgba(255,255,255,0.15);"><div class="mono" style="font-size:10px;color:var(--josun-light-green);letter-spacing:1px;margin-bottom:6px;">觸發層</div><div style="font-size:24px;font-weight:900;color:#FFFFFF;">55</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">追蹤政策</div><div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;">國家級19 + 省級36</div></div>
+      <div style="padding:16px;border-right:1px solid rgba(255,255,255,0.15);"><div class="mono" style="font-size:10px;color:var(--josun-light-cyan);letter-spacing:1px;margin-bottom:6px;">需求層</div><div style="font-size:24px;font-weight:900;color:#FFFFFF;">50</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">在建廠項目</div><div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;">投資總額超萬億</div></div>
+      <div style="padding:16px;border-right:1px solid rgba(255,255,255,0.15);"><div class="mono" style="font-size:10px;color:var(--josun-mint);letter-spacing:1px;margin-bottom:6px;">報價層</div><div style="font-size:24px;font-weight:900;color:#FFFFFF;">3.01億</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">年度報價漏斗</div><div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;">~139項/年 各產品線合計</div></div>
+      <div style="padding:16px;"><div class="mono" style="font-size:10px;color:var(--josun-accent-pink);letter-spacing:1px;margin-bottom:6px;">轉化層</div><div style="font-size:24px;font-weight:900;color:#FFFFFF;">1.18億</div><div style="font-size:11px;color:rgba(255,255,255,0.65);">2027開票目標</div><div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px;">綜合轉化率 ~39%</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: CASE STUDIES ===== -->
+<div class="tab-panel" id="tab-cases">
+  <div class="section-header"><span class="section-num">06</span><span class="section-title">實績案例</span><span class="section-desc">JOSUN Track Record &amp; Case Studies</span></div>
+  <div class="case-grid" id="caseGrid"></div>
+</div>
+
+<!-- ===== TAB: FACTORIES ===== -->
+<div class="tab-panel" id="tab-factories">
+  <div class="section-header"><span class="section-num">07</span><span class="section-title">在建廠企業名單</span><span class="section-desc">Factory Construction Projects — JOSUN Target Prospects</span></div>
+  <div class="filter-bar">
+    <input type="text" id="factorySearch" placeholder="搜尋公司名稱 / 城市 / 項目描述...">
+    <select id="industryFilter"><option value="">全部產業</option></select>
+    <select id="projTypeFilter"><option value="">全部類型</option><option value="新建">新建</option><option value="扩建">擴建</option></select>
+    <select id="provinceFactoryFilter"><option value="">全部省份</option></select>
+    <span class="filter-count" id="factoryCount">顯示 50 / 50 項</span>
+  </div>
+  <div class="table-wrap" style="max-height:800px;">
+    <table class="data-table" id="factoryTable">
+      <thead><tr><th style="width:160px">公司名稱</th><th style="width:80px">產業</th><th style="width:70px">省份</th><th style="width:60px">城市</th><th style="width:60px">類型</th><th>項目描述</th><th style="width:100px">投資金額</th><th style="width:80px">預計完工</th><th style="width:140px">喬山商機</th></tr></thead>
+      <tbody id="factoryBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== TAB: UPDATES ===== -->
+<div class="tab-panel" id="tab-updates">
+  <div class="section-header"><span class="section-num">08</span><span class="section-title">更新日誌</span><span class="section-desc">Data Update Log</span></div>
+  <ul class="update-list" id="updateList"></ul>
+</div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="policyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <h3 id="modalTitle"></h3>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-brand"><div class="footer-circle"></div><span>JOSUN SUSTAINABLE TECHNOLOGY GROUP | 喬山永續科技集團</span></div>
+  <div>POLICY INTELLIGENCE SCOUT v5.0 — 2026.06</div>
+  <div>Sees the whole picture for sustainable future.</div>
+</footer>
+
+<script>
+let POLICIES = [];
+let FACTORIES = [];
+
+const CAT_COLORS = {"碳達峰":"var(--josun-green)","綠色製造":"var(--accent-blue)","零碳工廠":"var(--accent-purple)","碳交易":"var(--accent-amber)","能源管理":"var(--accent-cyan)","智能製造":"var(--accent-red)","建築節能":"var(--accent-red)"};
+const CAT_TAG_CLASS = {"碳達峰":"tag-carbon","綠色製造":"tag-green","零碳工廠":"tag-zero","碳交易":"tag-energy","能源管理":"tag-energy","智能製造":"tag-smart","建築節能":"tag-building"};
+function getIndustryTagClass(industry) {
+  const ind = (industry || '').toLowerCase();
+  if (ind.includes('半导体') || ind.includes('半導體')) return 'tag-semi';
+  if (ind.includes('pcb') || ind.includes('fpcb') || ind.includes('電路板')) return 'tag-pcb';
+  if (ind.includes('ems') || ind.includes('电子代工') || ind.includes('電子代工') || ind.includes('组装') || ind.includes('組裝')) return 'tag-ems';
+  if (ind.includes('制药') || ind.includes('製藥') || ind.includes('生物') || ind.includes('医药') || ind.includes('醫藥') || ind.includes('生技')) return 'tag-pharma';
+  if (ind.includes('电池') || ind.includes('電池') || ind.includes('锂电') || ind.includes('鋰電') || ind.includes('新能源')) return 'tag-battery';
+  if (ind.includes('面板') || ind.includes('显示') || ind.includes('顯示') || ind.includes('光电') || ind.includes('光電') || ind.includes('oled') || ind.includes('lcd')) return 'tag-display';
+  if (ind.includes('汽车') || ind.includes('汽車') || ind.includes('车') || ind.includes('車') || ind.includes('新能源汽')) return 'tag-auto';
+  if (ind.includes('食品') || ind.includes('饮料') || ind.includes('飲料')) return 'tag-food';
+  if (ind.includes('数据') || ind.includes('數據') || ind.includes('data')) return 'tag-datacenter';
+  if (ind.includes('地产') || ind.includes('地產') || ind.includes('商业') || ind.includes('商業') || ind.includes('地产')) return 'tag-realestate';
+  return 'tag-fmcs';
+}
+
+const UPDATES = [
+  {date:"2026-06-06", text:"v5.0 精簡聚焦版：移除內部管理頁籤(全局總覽/公司戰略/銷售漏斗)，聚焦政策情報+機會論述+產業價值鏈。新增「政策論述」頁籤：7大政策主題 × 痛點-方案-金句四層對標結構"},
+  {date:"2026-06-06", text:"v4.0 Brand Edition：全面導入 JOSUN Brand Playbook v3 設計系統 — Sage Intelligence Brief 淺色主題、品牌色系(#54B033)、Roboto字體、Visual Hammer綠圓動機、dark-section對比區塊、卡片陰影與圓角升級"},
+  {date:"2026-06-06", text:"v3.0 產業價值鏈分析版：新增產業價值鏈頁籤 + 競爭格局分析 + 供應鏈動態追蹤 + Render雲端部署"},
+  {date:"2026-06-06", text:"新增「產業價值鏈」頁籤：政策→產業→產品線五階段映射、五大目標產業鏈動態、三類競爭對手差異化分析、上下游信號追蹤"},
+  {date:"2026-06-06", text:"新增價值鏈營收映射：55政策→50在建廠→3.01億報價漏斗→1.18億開票目標的轉化路徑可視化"},
+  {date:"2026-06-06", text:"設定自動更新排程：每週一9:00政策爬取 + 每天9:00在建廠項目動態掃描"},
+  {date:"2026-06-05", text:"v2.0 公司戰略整合版：整合行動計畫(20頁PPTX) + 公司簡介(93頁PPTX) 數據"},
+  {date:"2026-06-05", text:"新增「公司戰略」頁籤 + 「銷售漏斗」頁籤 + 「實績案例」頁籤 + Bid/No-Bid標準 + 毛利紅線"},
+  {date:"2026-06-05", text:"初始數據庫建立：55項政策 + 50個在建廠項目 + 機會對焦6大主題"},
+  {date:"—", text:"自動更新：每週一 09:00 政策更新 + 每日 09:00 廠項目掃描（定時任務已配置）"}
+];
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const pResp = await fetch('china_esg_policies.json');
+    const pData = await pResp.json();
+    POLICIES = pData.policies || [];
+  } catch(e) { console.warn('Policy JSON load failed, using empty', e); }
+
+  try {
+    const fResp = await fetch('josun_target_prospects_2025_2026.json');
+    const fData = await fResp.json();
+    FACTORIES = (fData.projects || fData.prospects || fData || []).map(f => ({
+      company: f.company || '',
+      industry: f.industry || '',
+      province: f.province || '',
+      city: f.city || '',
+      projectType: f.projectType || '',
+      description: f.description || '',
+      investment: f.investment || '',
+      completionDate: f.completionDate || '',
+      josunOpportunity: f.josunOpportunity || ''
+    }));
+  } catch(e) { console.warn('Factory JSON load failed, using empty', e); }
+
+  initNav();
+  initPolicyTracker();
+  initIndicators();
+  initOpportunities();
+  initPolicyBrief();
+  initCases();
+  initFactories();
+  initUpdates();
+});
+
+function initNav() {
+  document.querySelectorAll('.nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const tab = a.dataset.tab;
+      document.querySelectorAll('.nav a').forEach(n => n.classList.remove('active'));
+      a.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+    });
+  });
+}
+
+let activeProvince = '';
+
+function initPolicyTracker() {
+  const provinces = [...new Set(POLICIES.map(p=>p.province))].sort();
+  const chipContainer = document.getElementById('provinceChips');
+  chipContainer.innerHTML = `<div class="province-chip active" data-prov="" onclick="filterProvince(this,'')">全部<span class="province-count">${POLICIES.length}</span></div>`;
+  provinces.forEach(prov => {
+    const count = POLICIES.filter(p=>p.province===prov).length;
+    chipContainer.innerHTML += `<div class="province-chip" data-prov="${prov}" onclick="filterProvince(this,'${prov}')">${prov}<span class="province-count">${count}</span></div>`;
+  });
+
+  const cats = [...new Set(POLICIES.map(p=>p.category))].sort();
+  const catSel = document.getElementById('categoryFilter');
+  cats.forEach(c => { catSel.innerHTML += `<option value="${c}">${c}</option>`; });
+
+  document.getElementById('policySearch').addEventListener('input', renderPolicies);
+  catSel.addEventListener('change', renderPolicies);
+  document.getElementById('levelFilter').addEventListener('change', renderPolicies);
+  document.getElementById('statusFilter').addEventListener('change', renderPolicies);
+  renderPolicies();
+}
+
+function filterProvince(el, prov) {
+  activeProvince = prov;
+  document.querySelectorAll('.province-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderPolicies();
+}
+
+function renderPolicies() {
+  const search = document.getElementById('policySearch').value.toLowerCase();
+  const cat = document.getElementById('categoryFilter').value;
+  const level = document.getElementById('levelFilter').value;
+  const status = document.getElementById('statusFilter').value;
+
+  const filtered = POLICIES.filter(p => {
+    if (activeProvince && p.province !== activeProvince) return false;
+    if (cat && p.category !== cat) return false;
+    if (level && p.level !== level) return false;
+    if (status && p.status !== status) return false;
+    if (search) {
+      const s = (p.policyName + p.issuer + p.targets + p.province + p.opportunity).toLowerCase();
+      if (!s.includes(search)) return false;
+    }
+    return true;
+  });
+
+  const tbody = document.getElementById('policyBody');
+  tbody.innerHTML = '';
+  filtered.forEach((p, i) => {
+    const lvlClass = p.level === 'national' ? 'tag-national' : 'tag-provincial';
+    const catClass = CAT_TAG_CLASS[p.category] || '';
+    tbody.innerHTML += `<tr>
+      <td><span class="tag ${lvlClass}">${p.province}</span></td>
+      <td style="font-size:11px;color:var(--text-muted)">${p.level==='national'?'國家':'省級'}</td>
+      <td style="font-size:11px">${p.issuer}</td>
+      <td style="font-weight:500;color:var(--text-primary)">${p.policyName}</td>
+      <td class="mono" style="font-size:11px;color:var(--text-muted)">${p.date}</td>
+      <td><span class="tag ${catClass}">${p.category}</span></td>
+      <td><span class="tag tag-active">${p.status}</span></td>
+      <td><button class="expand-btn" onclick="showPolicyDetail(${POLICIES.indexOf(p)})">详情</button></td>
+    </tr>`;
+  });
+  document.getElementById('policyCount').textContent = `顯示 ${filtered.length} / ${POLICIES.length} 項`;
+}
+
+function showPolicyDetail(idx) {
+  const p = POLICIES[idx];
+  document.getElementById('modalTitle').textContent = p.policyName;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-field"><div class="modal-label">省市 / 層級</div><div class="modal-value">${p.province} | ${p.level==='national'?'國家級':'省級'}</div></div>
+    <div class="modal-field"><div class="modal-label">發布單位</div><div class="modal-value">${p.issuer}</div></div>
+    <div class="modal-field"><div class="modal-label">發布日期</div><div class="modal-value">${p.date}</div></div>
+    <div class="modal-field"><div class="modal-label">類別</div><div class="modal-value">${p.category}</div></div>
+    <div class="modal-field"><div class="modal-label">核心指標</div><div class="modal-value">${p.targets}</div></div>
+    <div class="modal-field"><div class="modal-label">與喬山業務關聯</div><div class="modal-value">${p.relevance}</div></div>
+    <div class="modal-field"><div class="modal-label">具體商機</div><div class="modal-value" style="color:var(--josun-green)">${p.opportunity}</div></div>
+    <div class="modal-field"><div class="modal-label">狀態</div><div class="modal-value">${p.status}</div></div>
+    ${p.url ? `<div class="modal-field"><div class="modal-label">官方來源</div><div class="modal-value"><a href="${p.url}" target="_blank">${p.url}</a></div></div>` : ''}
+  `;
+  document.getElementById('policyModal').classList.add('show');
+}
+
+function closeModal() { document.getElementById('policyModal').classList.remove('show'); }
+document.getElementById('policyModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeModal(); });
+
+function initIndicators() {
+  const indicators = [
+    {title:"碳達峰碳中和", color:"var(--josun-green)", items:[["2025單位GDP能耗降","13.5%"],["2025非化石能源佔比","20%"],["2030單位GDP CO2降","65%+"],["2060目標","碳中和"]]},
+    {title:"綠色製造體系", color:"var(--accent-blue)", items:[["2025綠色工廠認定","2038家"],["綠色工業園區","128個"],["梯度培育","國-省-市三級"],["設備更新","大規模推進"]]},
+    {title:"零碳工廠建設", color:"var(--accent-purple)", items:[["2027先行行業","電子/汽車/輕工"],["2030擴展行業","鋼鐵/石化/建材"],["廣東零碳園區","25個(2027)"],["申報週期","6-9個月"]]},
+    {title:"碳交易市場", color:"var(--accent-amber)", items:[["覆蓋行業","發電/鋼鐵/水泥/鋁"],["累計成交","超8億噸"],["2025收盤價","74.63元/噸"],["CBAM","2026.01起徵"]]},
+    {title:"能源管理監察", color:"var(--accent-cyan)", items:[["2025監察企業","2590家"],["2026監察","大幅擴圍"],["ISO 50001","新版認證"],["碳排放雙控","轉型落地"]]},
+    {title:"AI+製造", color:"var(--accent-red)", items:[["工業智能體","1000個"],["應用場景","500個"],["標杆企業","1000家"],["高質量數據集","100個"]]}
+  ];
+  const grid = document.getElementById('indicatorGrid');
+  indicators.forEach(ind => {
+    let rows = ind.items.map(([l,v]) => `<div class="indicator-row"><span class="label">${l}</span><span class="value">${v}</span></div>`).join('');
+    grid.innerHTML += `<div class="indicator-card"><div class="indicator-card-title"><span class="indicator-dot" style="background:${ind.color}"></span>${ind.title}</div>${rows}</div>`;
+  });
+}
+
+function initOpportunities() {
+  const opps = [
+    {icon:"\u2B21",bg:"rgba(84,176,51,0.1)",title:"FMCS統包 — 零碳工廠建設",sub:"FMCS系統工程 + 自動控制",productLine:"fmcs",body:"五部門《零碳工廠建設指導意見》明確電子/汽車/輕工2027年率先建設。喬山FMCS從能源診斷(Phase 1)到碳管理平台(Phase 2)再到認證輔導(Phase 3)完整服務閉環。廣東25個零碳園區、江蘇/浙江零碳工廠培育形成強大政策驅動力。符合Bid標準：年電費>1,075萬、園區級多棟、無塵室+制程冷卻。",stats:[{value:"11",label:"零碳政策",color:"var(--accent-purple)"},{value:"25+",label:"零碳園區",color:"var(--josun-green)"},{value:"8,600萬",label:"開票目標",color:"var(--accent-amber)"}]},
+    {icon:"\u25C8",bg:"rgba(14,165,233,0.1)",title:"JolyHi AI — 智能廠務中樞",sub:"Agentic RAG + GraphRAG + AutoML",productLine:"ai",body:"工信部等八部門「AI+製造」專項明確培育1000個工業智能體。JolyHi以Agentic RAG實現主動感知-思考-行動閉環：故障排查縮短75%、告警降噪95%、100%知識資產化。FEM智能機櫃(雙NVIDIA RTX Pro 6000 Ada)隨插即用，支援40,000+數據點。POC驅動銷售，毛利>50%。",stats:[{value:"1000",label:"智能體目標",color:"var(--accent-blue)"},{value:"-75%",label:"排障時間",color:"var(--josun-green)"},{value:"1,075萬",label:"開票目標",color:"var(--accent-cyan)"}]},
+    {icon:"\u25B3",bg:"rgba(232,146,13,0.1)",title:"JolyHi碳足跡 — CBAM合規",sub:"碳資產管理 + ISO 14067",productLine:"ai",body:"歐盟CBAM 2026.01正式徵收，2028年擴展至180種產品。JolyHi碳足跡模組+供應鏈碳排模組為出口導向型製造商提供碳足跡盤查。山東率先構建省級碳足跡管理體系，福建補貼最高800萬。群光電能ESG路徑圖驗證了從ISO 14064到ISO 14067的完整碳管理導入路徑。",stats:[{value:"180+",label:"CBAM品類",color:"var(--accent-amber)"},{value:"800萬",label:"福建補貼",color:"var(--josun-green)"},{value:"100%",label:"碳排追溯",color:"var(--accent-cyan)"}]},
+    {icon:"\u25C7",bg:"rgba(139,92,246,0.1)",title:"FMCS — 綠色工廠認證輔導",sub:"ISO 50001 + 梯度培育",productLine:"fmcs",body:"工信部2025年度認定2038家綠色工廠，國家-省-市三級梯度培育體系已建立。河北要求申報需先完成節能診斷，福建國家級綠色工廠獎勵30萬。2026年3月ISO 50001新版認證規則施行。喬山可從能碳診斷(Phase 1)切入，導入FMCS管理平台(Phase 2)，再輔導綠色工廠認證。",stats:[{value:"2038",label:"新認定工廠",color:"var(--accent-purple)"},{value:"30萬",label:"綠色工廠獎勵",color:"var(--josun-green)"},{value:"三級",label:"梯度培育",color:"var(--accent-blue)"}]},
+    {icon:"\u25A1",bg:"rgba(229,72,77,0.1)",title:"iCAIR — 智慧空調箱",sub:"建築節能 + 熱泵行動方案",productLine:"icair",body:"住建部要求完成既有建築節能改造3.5億m²，熱泵行動方案明確HVAC核心節能技術定位。iCAIR篩選條件：產業(電子組裝/商場/寫字樓/生技/食品)、營運≥10小時/日、地區(四季分明/free cooling潛力大)。川奇光電案例驗證：空調控制+磁懸浮冰水機+冷回收年節省2.45MWh。",stats:[{value:"3.5億m²",label:"節能改造",color:"var(--accent-red)"},{value:"2,150萬",label:"開票目標",color:"var(--accent-amber)"},{value:"5-15%",label:"能效提升",color:"var(--josun-green)"}]},
+    {icon:"\u25CB",bg:"rgba(84,176,51,0.1)",title:"新建廠房 — 全產品線導入",sub:"FMCS + JolyHi AI + iCAIR 三線覆蓋",productLine:"all",body:"50個在建廠項目中，半導體12項(投資超萬億)、PCB 7項、製藥8項。新建工廠是導入能源管理系統最佳時機。鵬鼎/Apple供應鏈ESG審核、長鑫存儲IPO驅動、寧德時代零碳工廠概念，均形成強力驅動。喬山可一次性導入FMCS統包+JolyHi AI+FEM智能機櫃+iCAIR空調箱，實現全產品線交叉銷售。",stats:[{value:"50",label:"在建廠項目",color:"var(--accent-red)"},{value:"萬億+",label:"半導體投資",color:"var(--accent-blue)"},{value:"1.18億",label:"營收目標",color:"var(--josun-green)"}]}
+  ];
+
+  const grid = document.getElementById('oppGrid');
+  opps.forEach(o => {
+    const statsHtml = o.stats.map(s => `<div class="opp-stat"><div class="opp-stat-value" style="color:${s.color}">${s.value}</div><div class="opp-stat-label">${s.label}</div></div>`).join('');
+    grid.innerHTML += `<div class="opp-card"><div class="opp-header"><div class="opp-icon" style="background:${o.bg};font-size:18px;">${o.icon}</div><div><div class="opp-title">${o.title}</div><div class="opp-sub">${o.sub}</div></div></div><div class="opp-body">${o.body}</div><div class="opp-stats">${statsHtml}</div></div>`;
+  });
+}
+
+// ==========================================
+// POLICY BRIEF — Policy-to-JOSUN Opportunity & Argumentation
+// ==========================================
+function initPolicyBrief() {
+  const briefs = [
+    {
+      theme: "零碳工廠建設",
+      color: "var(--accent-purple)",
+      policies: "五部門《零碳工廠建設指導意見》、廣東25個零碳園區、江蘇/浙江零碳工廠培育",
+      pain: "客戶面臨零碳工廠申報週期長(6-9個月)、數據採集困難、跨部門協調複雜、認證標準不熟悉等挑戰。電子/汽車/輕工三大行業2027年率先建設，時間壓力大。",
+      solution: "喬山FMCS從能源診斷(Phase 1)到碳管理平台(Phase 2)再到認證輔導(Phase 3)完整服務閉環。JolyHi AI實現碳足跡自動盤查與追溯。已有群光電能從ISO 14064到ISO 14067完整碳管理導入路徑驗證。",
+      argument: "「零碳工廠不是選修課，而是2027年的入場券。喬山從數據底座到認證輔導一條龍，讓你的零碳路徑可執行、可驗證、可複製。」",
+      tags: ["FMCS統包", "JolyHi碳足跡", "ISO 14067", "零碳認證"],
+      targets: "電子/汽車/輕工行業、廣東/江蘇/浙江園區企業",
+      revenue: "FMCS 8,600萬目標中佔比最大驅動力"
+    },
+    {
+      theme: "CBAM碳邊境與出口合規",
+      color: "var(--accent-amber)",
+      policies: "歐盟CBAM 2026.01正式徵收、2028擴展180品類、山東碳足跡管理體系、福建補貼最高800萬",
+      pain: "出口導向製造商面臨碳足跡數據缺失、供應鏈碳排追溯困難、CBAM申報合規風險。尤其PCB/EMS/電池行業直接受影響，客戶要求提供產品碳足跡報告。",
+      solution: "JolyHi碳足跡模組+供應鏈碳排模組，對接ISO 14067標準。FMCS數據底座提供即時能耗數據採集。群光電能案例已驗證完整碳管理導入路徑。",
+      argument: "「CBAM 2026年已經開始倒數，現在不建碳足跡系統，2028年你的產品就進不了歐洲。喬山的數據底座+AI碳管理，讓碳數據從手抄Excel變成即時可追溯。」",
+      tags: ["CBAM合規", "碳足跡盤查", "供應鏈碳排", "ISO 14067"],
+      targets: "出口歐盟的PCB/EMS/電池/面板製造商",
+      revenue: "JolyHi AI 1,075萬目標核心驅動"
+    },
+    {
+      theme: "AI+製造智能工廠",
+      color: "var(--accent-cyan)",
+      policies: "工信部等八部門「AI+製造」專項、1000個工業智能體、500個應用場景、1000家標杆企業",
+      pain: "工廠FMCS系統運行多年無人優化，能效逐年下降。數據孤島嚴重(水/電/氣分開管理)，異常告警泛濫無法定位，設備故障排查依賴老工程師經驗。",
+      solution: "JolyHi以Agentic RAG實現主動感知-思考-行動閉環：故障排查縮短75%、告警降噪95%、100%知識資產化。FEM智能機櫃(雙NVIDIA RTX Pro 6000 Ada)隨插即用，支援40,000+數據點。",
+      argument: "「當別人還在用Excel抄表的時候，你的工廠已經有了AI值班工程師。喬山不只是給你一個好看的平台，而是把20年的廠務經驗寫進了AI的腦袋裡。」",
+      tags: ["JolyHi AI", "Agentic RAG", "FEM智能櫃", "故障排查"],
+      targets: "已有FMCS系統的半導體/PCB/面板大型工廠",
+      revenue: "JolyHi AI導入 + FEM經銷 毛利>50%"
+    },
+    {
+      theme: "綠色工廠認證與梯度培育",
+      color: "var(--josun-green)",
+      policies: "工信部2025認定2038家綠色工廠、國家-省-市三級梯度培育、河北節能診斷前置、福建獎勵30萬、ISO 50001新版2026.03施行",
+      pain: "企業想申報綠色工廠但不知道從何入手，節能診斷數據不完整，能源管理體系缺乏系統化支撐，ISO 50001新版認證規則變化大。",
+      solution: "喬山從能碳診斷(Phase 1)切入，導入FMCS管理平台(Phase 2)，再輔導綠色工廠認證(Phase 3)。FMCS提供ISO 50001所需的即時能源數據。群光電能已獲國家級綠色工廠認定。",
+      argument: "「綠色工廠認證不是一張獎狀，而是一套數據驅動的能源管理體系。喬山讓你的能源數據從『申報時臨時拼湊』變成『365天即時可查』。」",
+      tags: ["FMCS管理平台", "ISO 50001", "綠色工廠", "梯度培育"],
+      targets: "有意願申報綠色工廠/已經在梯度培育名單中的製造企業",
+      revenue: "FMCS + 諮詢輔導 組合切入"
+    },
+    {
+      theme: "建築節能與HVAC改造",
+      color: "var(--accent-red)",
+      policies: "住建部既有建築節能改造3.5億m²、熱泵行動方案、大規模設備更新",
+      pain: "中央空調系統能耗佔建築總能耗40-60%，但控制策略粗放，靠人工經驗調節。季節轉換、負載變化時能效大幅波動。运维人员不足，24小时值守困难。",
+      solution: "iCAIR智慧空調箱控制器，適用電子組裝/商場/寫字樓/生技/食品/實驗室/醫院。川奇光電案例驗證：磁懸浮+冷回收+空調控制，年節能2.45MWh、減碳1400tCO2e、節省184萬RMB。",
+      argument: "「空調系統是建築能耗的最大黑洞。iCAIR不是換一台新空調，而是給你的空調系統裝上大腦——同樣的設備，省15%的電。」",
+      tags: ["iCAIR控制器", "HVAC節能", "建築節能", "磁懸浮"],
+      targets: "≥10小時/日營運的大型場域(電子廠/商場/醫院/生技廠)",
+      revenue: "iCAIR 2,150萬目標、四季分明地區優先"
+    },
+    {
+      theme: "能源管理監察與碳排放雙控",
+      color: "var(--accent-blue)",
+      policies: "2025監察企業2590家、2026大幅擴圍、碳排放雙控制度轉型落地",
+      pain: "能源監察範圍擴大，越來越多的企業被納入監察名單。企業缺乏即時能源數據，應對監察時需要臨時整理大量紙質記錄。碳排放雙控從能耗雙控轉型，統計口徑和方法都需要調整。",
+      solution: "FMCS系統提供完整的能源數據即時採集、分析與報告功能。自動抄表取代人工記錄，異常告警幫助提前發現問題。JolyHi AI可預測能耗趨勢，協助企業提前準備監察數據。",
+      argument: "「能源監察擴圍是大勢所趨，與其每次被檢查時手忙腳亂，不如現在就建好數據底座。喬山FMCS讓你的能源數據隨時ready，監察來了不慌。」",
+      tags: ["FMCS能源管理", "自動抄表", "能源監察", "碳排放雙控"],
+      targets: "被納入或即將被納入能源監察名單的重點用能企業",
+      revenue: "FMCS標準方案 + AI增值模組"
+    },
+    {
+      theme: "新建廠房全產品線導入",
+      color: "var(--accent-purple)",
+      policies: "50個在建廠項目(半導體12項、PCB 7項、製藥8項)、科創板IPO ESG披露要求、Apple供應鏈碳中和",
+      pain: "新建工廠是導入能源管理系統的最佳時機，但建設期決策窗口短暫。業主往往優先考慮建設進度和成本，忽略能源管理系統的提前規劃。等到投產後再補裝系統，改造成本翻倍。",
+      solution: "喬山一次性導入FMCS統包+JolyHi AI+FEM智能機櫃+iCAIR空調箱，實現全產品線交叉銷售。新建廠房可從設計階段就整合能源管理架構，避免後續改造的高成本與停產風險。",
+      argument: "「新廠建設是能源管理系統的最佳入場時機——設計階段多花5%的規劃，投產後省下50%的改造成本。喬山三產品線一站配齊，不用找三家供應商互相扯皮。」",
+      tags: ["FMCS統包", "JolyHi AI", "FEM智能櫃", "iCAIR", "全線覆蓋"],
+      targets: "半導體/PCB/製藥行業新建/擴建工廠(50個在建項目)",
+      revenue: "三產品線合計 1.18億 2027目標"
+    }
+  ];
+
+  const grid = document.getElementById('policyBriefGrid');
+  briefs.forEach((b, i) => {
+    const tagsHtml = b.tags.map(t => '<span class="tag tag-fmcs" style="margin:2px;">' + t + '</span>').join('');
+    grid.innerHTML += '<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.05);border-left:4px solid ' + b.color + ';">' +
+      '<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">' +
+        '<div style="width:36px;height:36px;border-radius:50%;background:' + b.color + ';display:flex;align-items:center;justify-content:center;color:white;font-family:var(--font-digital);font-size:14px;font-weight:700;flex-shrink:0;">' + (i+1) + '</div>' +
+        '<div><div style="font-size:17px;font-weight:900;color:var(--text-primary);">' + b.theme + '</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);font-family:var(--font-digital);font-weight:500;">' + b.policies + '</div></div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">' +
+        '<div style="padding:16px;background:rgba(229,72,77,0.05);border-radius:var(--radius);border-left:3px solid var(--accent-red);">' +
+          '<div style="font-size:10px;color:var(--accent-red);font-family:var(--font-digital);font-weight:600;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase;">PAIN POINT 客戶痛點</div>' +
+          '<div style="font-size:12px;color:var(--text-secondary);line-height:1.8;">' + b.pain + '</div></div>' +
+        '<div style="padding:16px;background:rgba(84,176,51,0.05);border-radius:var(--radius);border-left:3px solid var(--josun-green);">' +
+          '<div style="font-size:10px;color:var(--josun-green);font-family:var(--font-digital);font-weight:600;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase;">JOSUN SOLUTION 喬山方案</div>' +
+          '<div style="font-size:12px;color:var(--text-secondary);line-height:1.8;">' + b.solution + '</div></div></div>' +
+      '<div style="padding:16px;background:var(--josun-dark-green);border-radius:var(--radius);margin-bottom:14px;">' +
+        '<div style="font-size:10px;color:var(--josun-mint);font-family:var(--font-digital);font-weight:600;letter-spacing:1px;margin-bottom:6px;">KEY ARGUMENT 論述金句</div>' +
+        '<div style="font-size:14px;color:white;font-weight:500;line-height:1.8;font-style:italic;">' + b.argument + '</div></div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">' +
+        '<div style="display:flex;gap:4px;flex-wrap:wrap;">' + tagsHtml + '</div>' +
+        '<div style="font-size:11px;color:var(--text-muted);">目標客戶: ' + b.targets + '</div></div>' +
+      '<div style="font-size:11px;color:var(--josun-green);margin-top:8px;font-weight:600;">營收對標: ' + b.revenue + '</div>' +
+    '</div>';
+  });
+}
+
+function initCases() {
+  const cases = [
+    {client:"鵬鼎控股 Zhen Ding Tech",industry:"PCB — 全球最大PCB製造商",location:"泰國巴真府 SAHA工業園區",desc:"FMCS數位化底座實現「極致能效」與「智慧管理」：1+N集中式管控架構、全廠級統一監控平台、AI智控節能(冰水+空壓優化)。打破水/電/氣數據孤島，直接對接集團2050淨零排放路徑。",results:"綠能減碳15%(2025) | 2030目標30% | 2050碳中和 | 水資源回收達標",tags:["FMCS","能源管理","AI智控","ESG戰略"]},
+    {client:"臺郡科技 Flexium",industry:"FPCB — 全球知名軟板PCB製造廠",location:"台灣/大陸",desc:"FMCS系統整合工程，實現廠務系統即時監控、能源管理優化與環境數據統一管理。",results:"FMCS系統整合 | 能源管理優化 | 環境數據管理",tags:["FMCS","系統整合"]},
+    {client:"和碩聯合科技 Pegatron",industry:"EMS — 全球前五大電子代工組裝廠",location:"台灣/大陸",desc:"FMCS系統整合與能源管理平台導入，支援Apple供應鏈ESG合規要求。",results:"供應鏈ESG合規 | 能源管理平台 | 廠務數位化",tags:["FMCS","EMS","Apple供應鏈"]},
+    {client:"川奇光電",industry:"面板 — 低碳綠色工廠標杆",location:"揚州",desc:"深度節能改造標杆案例：磁懸浮冰水主機(COP>6)、IE4永磁電機、變風量排氣、變水量空調、太陽能11.6MW(年省600萬RMB)、空壓熱回收、冷回收(年省135萬kWh)。",results:"年節能2.45MWh | 減碳1400tCO2e | 節省184萬RMB | 太陽能800萬kWh/年",tags:["深度節能","太陽能","低碳工廠"]},
+    {client:"京鼎精密 King Ding",industry:"精密製造 — FMCS能源管理系統",location:"泰國春武里府",desc:"FMCS廠務能源管理系統導入：設備即時監控、水/電/氣能耗分析、自動抄表與費用管理、異常告警與定位。為後續AI優化和碳管理奠定數據底座。",results:"設備即時監控 | 能耗分析 | 異常告警 | 數據底座",tags:["FMCS","能源管理","泰國"]},
+    {client:"群光電能 Chicony Power",industry:"電源供應器 — ESG全程輔導",location:"蘇州",desc:"完整ESG路徑圖(2019-2025)：從ISO 14001→碳盤查→SBTi/RE100→ISO 14067碳足跡→JolyHi FMCS/EMS/碳管理平台→近零碳工廠→綠色工廠國家級認定。",results:"SBTi+RE100 | ISO 14067 | JolyHi導入 | 國家級綠色工廠 | 完整ESG路徑",tags:["ESG全程","JolyHi","綠色工廠","碳足跡"]}
+  ];
+
+  const grid = document.getElementById('caseGrid');
+  cases.forEach(c => {
+    const tagsHtml = c.tags.map(t => `<span class="tag tag-fmcs" style="margin:2px;">${t}</span>`).join('');
+    grid.innerHTML += `<div class="case-card">
+      <div class="case-client">${c.client}</div>
+      <div class="case-industry">${c.industry}</div>
+      <div style="font-size:10px;color:var(--text-muted);margin-bottom:8px;font-family:'Roboto',sans-serif;font-weight:500;">${c.location}</div>
+      <div class="case-desc">${c.desc}</div>
+      <div class="case-result">
+        <div style="margin-bottom:8px;">${c.results}</div>
+        ${tagsHtml}
+      </div>
+    </div>`;
+  });
+}
+
+function initFactories() {
+  const industries = [...new Set(FACTORIES.map(f=>f.industry))].sort();
+  const provinces = [...new Set(FACTORIES.map(f=>f.province))].sort();
+  const indSel = document.getElementById('industryFilter');
+  const provSel = document.getElementById('provinceFactoryFilter');
+  industries.forEach(i => { indSel.innerHTML += `<option value="${i}">${i}</option>`; });
+  provinces.forEach(p => { provSel.innerHTML += `<option value="${p}">${p}</option>`; });
+
+  document.getElementById('factorySearch').addEventListener('input', renderFactories);
+  indSel.addEventListener('change', renderFactories);
+  document.getElementById('projTypeFilter').addEventListener('change', renderFactories);
+  provSel.addEventListener('change', renderFactories);
+  renderFactories();
+}
+
+function renderFactories() {
+  const search = document.getElementById('factorySearch').value.toLowerCase();
+  const ind = document.getElementById('industryFilter').value;
+  const proj = document.getElementById('projTypeFilter').value;
+  const prov = document.getElementById('provinceFactoryFilter').value;
+
+  const filtered = FACTORIES.filter(f => {
+    if (ind && f.industry !== ind) return false;
+    if (proj && !f.projectType.includes(proj)) return false;
+    if (prov && f.province !== prov) return false;
+    if (search) {
+      const s = (f.company + f.city + f.description + (f.josunOpportunity||'')).toLowerCase();
+      if (!s.includes(search)) return false;
+    }
+    return true;
+  });
+
+  const tbody = document.getElementById('factoryBody');
+  tbody.innerHTML = '';
+  filtered.forEach(f => {
+    const indClass = getIndustryTagClass(f.industry);
+    tbody.innerHTML += `<tr>
+      <td style="font-weight:500;color:var(--text-primary);font-size:12px;">${f.company}</td>
+      <td><span class="tag ${indClass}">${f.industry}</span></td>
+      <td style="font-size:11px">${f.province}</td>
+      <td style="font-size:11px">${f.city}</td>
+      <td style="font-size:11px">${f.projectType}</td>
+      <td style="font-size:11px">${f.description}</td>
+      <td class="mono" style="font-size:11px;color:var(--accent-amber)">${f.investment}</td>
+      <td class="mono" style="font-size:11px;color:var(--text-muted)">${f.completionDate}</td>
+      <td style="font-size:11px;color:var(--josun-green)">${f.josunOpportunity||''}</td>
+    </tr>`;
+  });
+  document.getElementById('factoryCount').textContent = `顯示 ${filtered.length} / ${FACTORIES.length} 項`;
+}
+
+function initUpdates() {
+  const list = document.getElementById('updateList');
+  UPDATES.forEach(u => {
+    list.innerHTML += `<li class="update-item"><span class="update-dot"></span><div><div class="update-date">${u.date}</div><div class="update-text">${u.text}</div></div></li>`;
+  });
+}
+</script>
+</body>
+</html>
