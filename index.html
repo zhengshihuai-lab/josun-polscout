@@ -259,9 +259,33 @@ body { font-family: 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans', sans-serif; bac
 
 @media (max-width: 1200px) { .kpi-grid, .kpi-grid-4 { grid-template-columns: repeat(3, 1fr); } .kpi-grid-3 { grid-template-columns: repeat(2, 1fr); } .indicator-grid, .case-grid { grid-template-columns: repeat(2, 1fr); } .opp-grid { grid-template-columns: 1fr; } .industry-chain { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 768px) { .header, .nav, .main, .footer { padding-left: 20px; padding-right: 20px; } .kpi-grid, .kpi-grid-4, .kpi-grid-3, .indicator-grid, .case-grid { grid-template-columns: 1fr; } .industry-chain { grid-template-columns: 1fr; } }
+/* === Password Lock Overlay === */
+.pw-lock { position: fixed; inset: 0; z-index: 99999; background: linear-gradient(135deg, #014725 0%, #0a3d1f 50%, #1a5c35 100%); display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
+.pw-lock.hidden { opacity: 0; pointer-events: none; }
+.pw-card { background: #fff; border-radius: 16px; padding: 48px 40px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.pw-card .pw-logo { font-size: 14px; font-weight: 700; color: #014725; letter-spacing: 3px; margin-bottom: 6px; }
+.pw-card .pw-title { font-size: 22px; font-weight: 700; color: #1A1A1A; margin-bottom: 4px; }
+.pw-card .pw-sub { font-size: 13px; color: #595857; margin-bottom: 28px; }
+.pw-card input { width: 100%; padding: 14px 16px; border: 2px solid #E5E5E5; border-radius: 10px; font-size: 16px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+.pw-card input:focus { border-color: #54B033; }
+.pw-card input.shake { animation: pwShake 0.4s ease; border-color: #E5484D; }
+@keyframes pwShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+.pw-card button { width: 100%; margin-top: 16px; padding: 14px; background: #014725; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.pw-card button:hover { background: #54B033; }
+.pw-err { color: #E5484D; font-size: 13px; margin-top: 10px; min-height: 20px; }
 </style>
 </head>
 <body>
+<div class="pw-lock" id="pwLock">
+  <div class="pw-card">
+    <div class="pw-logo">JOSUN</div>
+    <div class="pw-title">政新哨兵</div>
+    <div class="pw-sub">ESG政策追蹤智能體 — 輸入存取密碼</div>
+    <input type="password" id="pwInput" placeholder="請輸入密碼" autocomplete="off">
+    <button id="pwBtn" onclick="checkPw()">進入系統</button>
+    <div class="pw-err" id="pwErr"></div>
+  </div>
+</div>
 <div class="accent-bar"></div>
 
 <header class="header">
@@ -832,6 +856,31 @@ function initUpdates() {
     list.innerHTML += `<li class="update-item"><span class="update-dot"></span><div><div class="update-date">${u.date}</div><div class="update-text">${u.text}</div></div></li>`;
   });
 }
+// === Password Lock ===
+async function sha256(msg) {
+  const buf = new TextEncoder().encode(msg);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+const PW_HASH = 'fd97b40da2636cb8693042f611bcbfa752d3a0ac09eeb1ca146894f94c796928';
+async function checkPw() {
+  const input = document.getElementById('pwInput');
+  const err = document.getElementById('pwErr');
+  const val = input.value;
+  if (!val) { err.textContent = '請輸入密碼'; return; }
+  const hash = await sha256(val);
+  if (hash === PW_HASH) {
+    document.getElementById('pwLock').classList.add('hidden');
+    setTimeout(() => document.getElementById('pwLock').remove(), 600);
+  } else {
+    err.textContent = '密碼錯誤，請重試';
+    input.classList.add('shake');
+    input.value = '';
+    setTimeout(() => input.classList.remove('shake'), 500);
+  }
+}
+document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPw(); });
+document.getElementById('pwInput').focus();
 </script>
 </body>
 </html>
